@@ -38,6 +38,38 @@ result = pyfiglet.figlet_format("Created By ", font="digital")
 print(result)
 print("Fazalu,Vishnu (VN),Augustin,Vyshakh, Amal,Nobel, Sudharshan, Afthab, HariThejas,Akshara, Akshay,Nihal,Nithin")
 
+# Create the command-line argument parser
+parser = argparse.ArgumentParser(description='Scan a remote host for open ports.')
+parser.add_argument('host', metavar='HOST', type=str, help='the remote host to scan')
+args = parser.parse_args()
+
+# Ask the user to select a scan option
+print('Select a scan option:')
+print('1. Basic (ports 20, 21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 465, 587, 993, 995, 1337)')
+print('2. Medium (ports 1-1024)')
+print('3. High (ports 1-65535)')
+scan_option = input('Enter the number of the scan option to use (default: 2): ')
+if scan_option == '1':
+    ports = [20, 21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 465, 587, 993, 995, 1337]
+elif scan_option == '3':
+    ports = range(1, 65536)
+else:
+    ports = range(1, 1025)
+
+# Ask the user if they want to enable script scan
+script_scan = input('Enable script scan? (y/n) ')
+if script_scan.lower() == 'y':
+    script_scan = True
+else:
+    script_scan = False
+
+remoteServer = args.host
+remoteServerIP = socket.gethostbyname(remoteServer)
+
+print(" " * 60)
+print(f"Please wait, scanning remote host {remoteServerIP}")
+
+print("-" * 60)
 done = False
 # here is the animation
 def animate():
@@ -76,9 +108,9 @@ ports = scan_options[args.scan_option]
 remoteServer = args.host
 remoteServerIP = socket.gethostbyname(remoteServer)
 
-print("-" * 60)
+print(" " * 60)
 print(f"Please wait, scanning remote host {remoteServerIP}")
-print(f"Scan option: {args.scan_option}")
+
 print("-" * 60)
 
 t1 = datetime.now()
