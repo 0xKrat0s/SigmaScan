@@ -23,7 +23,7 @@ if len(sys.argv) == 1:
 |____/|_|\__, |_| |_| |_|\__,_|____/ \___\__,_|_| |_(_|_)
          |___/                                           
 
-Created By : Fazalu,Vishnu (VN),Augustin,Vyshakh, Amal, Nobel, Sudharshan, Afthab, HariThejas,Akshara, Akshay,Nihal,Nithin
+Created By : Fazalu ,Vishnu (VN),Augustin,Vyshakh, Amal, Nobel, Sudharshan, Afthab, HariThejas,Akshara, Akshay,Nihal,Nithin
 
 Help : python sigma.py -h
         ''')
