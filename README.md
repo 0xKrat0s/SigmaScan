@@ -1,33 +1,29 @@
-# SigmaScan
-Sigma Scan is a simple Python script for performing a portscanning.
+# Sigma Scan!
 
-# Installation
-1. Clone the repo
-```
+Sigma Scan is a simple Python script for performing a port scanning.
+
+## Installation
+
+1.Clone the repo
+
+```bash
 https://github.com/0xKrat0s/SigmaScan.git
-```
-# Requirements
-The script requires Python 3.6 or higher and the following Python libraries:
-
-
-subprocess.run
-
-python-nmap
-
-pyfiglet
-
-You can install these libraries by running:
-```
+cd SigmaScan
 pip install -r requirements.txt
 ```
 
-# Usage
+
+## Usage
 To use this script, simply run the command:
-```
+
+```bash
 python sigma.py <target_ip>
 ```
 The script will prompt you for input and perform the task accordingly.
 
+## Contributing
 
-# Creators
-This script was created by Fazalu, Vishnu (VN), Augustin, Vyshakh, Amal, Nobel, Sudharshan, Afthab, HariThejas, Akshara, Akshay, Nihal and Nithin.
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
