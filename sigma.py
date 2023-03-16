@@ -45,12 +45,12 @@ args = parser.parse_args()
 
 # Ask the user to select a scan option
 print('Select a scan option:')
-print('1. Basic (ports 20, 21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 465, 587, 993, 995, 1337)')
-print('2. Medium (ports 1-1024)')
-print('3. High (ports 1-65535)')
+print('1. Basic (Ports: 20, 21, 22, 23, 25, 53, 69, 80, 110, 135, 139, 143, 443, 465, 587, 636, 993, 995,1337, 3306)')
+print('2. Medium (Ports: 1-1024)')
+print('3. High (Ports: 1-65535)')
 scan_option = input('Enter the number of the scan option to use (default: 2): ')
 if scan_option == '1':
-    ports = [20, 21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 465, 587, 993, 995, 1337]
+    ports = [20, 21, 22, 23, 25, 53, 69, 80, 110, 135, 139, 143, 443, 465, 587, 636, 993, 995,1337, 3306]
 elif scan_option == '3':
     ports = range(1, 65536)
 else:
@@ -101,7 +101,7 @@ args = parser.parse_args()
 scan_options = {
     'medium': range(1, 1025),
     'high': range(1, 65536),
-    'basic': [20, 21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 465, 587, 993, 995,1337],
+    'basic': [20, 21, 22, 23, 25, 53, 69, 80, 110, 135, 139, 143, 443, 465, 587, 636, 993, 995,1337, 3306],
 }
 ports = scan_options[args.scan_option]
 
