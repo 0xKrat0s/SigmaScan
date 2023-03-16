@@ -8,6 +8,23 @@ python sigma.py
 
 The script will prompt you for input and perform the task accordingly.
 
+For Basic Scan :
+
+python sigma.py -s basic <target_ip> 
+
+Medium Scan :
+
+python sigma.py -s basic <target_ip> 
+
+High Scan :
+ 
+python sigma.py -s High <target_ip>
+
+Default Script Scan:
+
+python sigma.py -s High <target_ip> -sC
+
+
 # Requirements
 The script requires Python 3.6 or higher and the following Python libraries:
 
