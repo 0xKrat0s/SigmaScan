@@ -11,7 +11,9 @@ The script requires Python 3.6 or higher and the following Python libraries:
 
 
 subprocess.run
+
 python-nmap
+
 pyfiglet
 
 You can install these libraries by running:
