@@ -14,34 +14,17 @@ from concurrent.futures import ThreadPoolExecutor
 from termcolor import colored
 
 
-if len(sys.argv) == 1:
-    print(r'''
- ____  _                       ____                  _ _ 
-/ ___|(_) __ _ _ __ ___   __ _/ ___|  ___ __ _ _ __ | | |
-\___ \| |/ _` | '_ ` _ \ / _` \___ \ / __/ _` | '_ \| | |
- ___) | | (_| | | | | | | (_| |___) | (_| (_| | | | |_|_|
-|____/|_|\__, |_| |_| |_|\__,_|____/ \___\__,_|_| |_(_|_)
-         |___/                                           
-
-Created By : Fazalu ,Vishnu (VN),Augustin,Vyshakh, Amal, Nobel, Sudharshan, Afthab, HariThejas,Akshara, Akshay,Nihal,Nithin
-
-Help : python sigma.py -h
-        ''')
-
-    sys.exit()
-
-
 ascii_banner = pyfiglet.figlet_format("SigmaScan!!")
 print(ascii_banner)
 
 result = pyfiglet.figlet_format("Created By ", font="digital")
 print(result)
-print("Fazalu,Vishnu (VN),Augustin,Vyshakh, Amal,Nobel, Sudharshan, Afthab, HariThejas,Akshara, Akshay,Nihal,Nithin")
 
-# Create the command-line argument parser
-parser = argparse.ArgumentParser(description='Scan a remote host for open ports.')
-parser.add_argument('host', metavar='HOST', type=str, help='the remote host to scan')
-args = parser.parse_args()
+# Ask the user for the target IP address
+ip = input("Enter IP address to scan: ")
+
+print(" " * 60)
+print(f"Please wait, scanning remote host {ip}")
 
 # Ask the user to select a scan option
 print('Select a scan option:')
@@ -51,115 +34,57 @@ print('3. High (Ports: 1-65535)')
 scan_option = input('Enter the number of the scan option to use (default: 2): ')
 if scan_option == '1':
     ports = [20, 21, 22, 23, 25, 53, 69, 80, 110, 135, 139, 143, 443, 465, 587, 636, 993, 995,1337, 3306]
-elif scan_option == '3':
-    ports = range(1, 65536)
-else:
+elif scan_option == '2':
     ports = range(1, 1025)
-
-# Ask the user if they want to enable script scan
-script_scan = input('Enable script scan? (y/n) ')
-if script_scan.lower() == 'y':
-    script_scan = True
 else:
-    script_scan = False
+    ports = range(1, 65536)
 
-remoteServer = args.host
-remoteServerIP = socket.gethostbyname(remoteServer)
+# Initialize nmap scanner
+scanner = nmap.PortScanner()
 
-print(" " * 60)
-print(f"Please wait, scanning remote host {remoteServerIP}")
-
-print("-" * 60)
-done = False
-# here is the animation
-def animate():
-    for c in itertools.cycle(['|', '/', '-', '\\']):
-        if done:
-            break
-        sys.stdout.write('\rloading ' + c)
-        sys.stdout.flush()
-        time.sleep(0.1)
-    sys.stdout.write('\r ')
-
-t = threading.Thread(target=animate)
-t.start()
-
-# long process here
-time.sleep(3)
-done = True
-
-# Create the command-line argument parser
-parser = argparse.ArgumentParser(description='Scan a remote host for open ports.')
-parser.add_argument('host', metavar='HOST', type=str, help='the remote host to scan')
-parser.add_argument('-s', '--scan-option', type=str, choices=['basic', 'medium', 'high'], default='medium',
-                    help='the scan option to use (default: medium)')
-parser.add_argument('-sC', '--script-scan', action='store_true', help='enable script scan')
-
-args = parser.parse_args()
-
-# Map scan options to port ranges
-scan_options = {
-    'medium': range(1, 1025),
-    'high': range(1, 65536),
-    'basic': [20, 21, 22, 23, 25, 53, 69, 80, 110, 135, 139, 143, 443, 465, 587, 636, 993, 995,1337, 3306],
-}
-ports = scan_options[args.scan_option]
-
-remoteServer = args.host
-remoteServerIP = socket.gethostbyname(remoteServer)
-
-print(" " * 60)
-print(f"Please wait, scanning remote host {remoteServerIP}")
-
-print("-" * 60)
-
-t1 = datetime.now()
-
-def scan_port(port):
+# Define function to scan a single port on a target host
+# Define function to scan a single port on a target host
+def scan_port(target_host, port):
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = sock.connect_ex((remoteServerIP, port))
-        if result == 0:
-            print(f"Port {port}: Open")
-    except Exception as e:
-        print(f"Error scanning port {port}: {e}")
-    finally:
-        sock.close()
-
-# Scan ports using multiple threads
-with ThreadPoolExecutor(max_workers=50) as executor:
-    for port in ports:
-        executor.submit(scan_port, port)
-
-# Perform an additional scan using nmap
-nm = nmap.PortScanner()
-nmap_args = f"-sV -O -p {','.join(map(str, ports))}"
-if args.script_scan:
-    nmap_args += " -sC"
-else:
-    nmap_args += " --script=default"
-nm.scan(remoteServerIP, arguments=nmap_args)
-
-print(" " * 60)
-print(f"Scan completed in {datetime.now() - t1}")
-print("-" * 60)
+        result = scanner.scan(target_host, str(port), arguments='-sV -sC')
+        port_status = result['scan'][target_host]['tcp'][port]['state']
+        if port_status == 'open':
+            print(colored(f"[+] Port {port} is open", 'green'))
+            print(f"\tService: {result['scan'][target_host]['tcp'][port]['name']}")
+            print(f"\tVersion: {result['scan'][target_host]['tcp'][port]['version']}")
+    except:
+        print(colored(f"[!] Error scanning port {port}", 'yellow'))
 
 
+# Define function to scan a target host for open ports
+def scan_host(target_host):
+    try:
+        start_time = datetime.now()
+        print(f"Scanning host {target_host}...")
+        for port in ports:
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                executor.submit(scan_port, target_host, port)
+        end_time = datetime.now()
+        scan_duration = end_time - start_time
+        print(f"Scanning completed in {scan_duration}")
+    except KeyboardInterrupt:
+        print(colored("[!] Keyboard Interrupt - Exiting...", 'yellow'))
+        sys.exit()
+    except:
+        print(colored(f"[!] Error scanning host {target_host}", 'yellow'))
 
-
-# Print the results from the nmap scan, including script results
-for host in nm.all_hosts():
-    print(f"Open ports for {host}:")
-    for port in nm[host]['tcp']:
-        if nm[host]['tcp'][port]['state'] == 'open':
-            print(f"\t{port}: {nm[host]['tcp'][port]['name']} - {nm[host]['tcp'][port]['product']} {nm[host]['tcp'][port]['version']}")
-            if args.script_scan and 'script' in nm[host]['tcp'][port]:
-                print(f"\t\tScript results: {nm[host]['tcp'][port]['script']}")
-    if 'osmatch' in nm[host]:
-        print(f"OS detection for {host}:")
-        for os in nm[host]['osmatch']:
-            print(f"\t{os['name']} - {os['accuracy']}%")
-
-# Print a final message
-print("-" * 60)
-print("Scan complete!")
+# Start the scan
+try:
+    scan_host(ip)
+except KeyboardInterrupt:
+    print(colored("[!] Keyboard Interrupt - Exiting...", 'yellow'))
+    sys.exit()
+except socket.gaierror:
+    print(colored("[!] Hostname could not be resolved", 'yellow'))
+    sys.exit()
+except socket.error:
+    print(colored("[!] Could not connect to server", 'yellow'))
+    sys.exit()
+except:
+    print(colored("[!] Unexpected error:", 'yellow'))
+    raise
