@@ -17,7 +17,7 @@ pip install -r requirements.txt
 To use this script, simply run the command:
 
 ```bash
-python sigma.py <target_ip>
+python sigma.py
 ```
 The script will prompt you for input and perform the task accordingly.
 
