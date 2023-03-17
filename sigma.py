@@ -13,12 +13,28 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from termcolor import colored
 
+if len(sys.argv) == 1:
+    print(r'''
+ ____  _                       ____                  _ _ 
+/ ___|(_) __ _ _ __ ___   __ _/ ___|  ___ __ _ _ __ | | |
+\___ \| |/ _` | '_ ` _ \ / _` \___ \ / __/ _` | '_ \| | |
+ ___) | | (_| | | | | | | (_| |___) | (_| (_| | | | |_|_|
+|____/|_|\__, |_| |_| |_|\__,_|____/ \___\__,_|_| |_(_|_)
+         |___/                                           
+
+Created By : Fazalu,Vishnu (VN),Augustin,Vyshakh, Amal,Nobel, Sudharshan, Afthab, Adil,  HariThejas, Deron, Afthab, Akshara, Akshay,Nihal,Nithin
+
+Help : python sigma.py -h
+        ''')
+
+    sys.exit()
 
 ascii_banner = pyfiglet.figlet_format("SigmaScan!!")
 print(ascii_banner)
 
 result = pyfiglet.figlet_format("Created By ", font="digital")
 print(result)
+print("Fazalu,Vishnu (VN),Augustin,Vyshakh, Amal,Nobel, Sudharshan, Afthab, Adil,  HariThejas, Deron, Afthab, Akshara, Akshay,Nihal,Nithin")
 
 # Ask the user for the target IP address
 ip = input("Enter IP address to scan: ")
